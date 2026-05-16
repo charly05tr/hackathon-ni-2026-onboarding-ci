@@ -4,6 +4,6 @@
   - [Carlos Eduardo Torres Manzanares] — [Frontend]
   - [Yasser Rugama] — [Backend & comunicador]
   - [Carlos Alfaro] — [Backend]
-  - [María Reyes]
+  - [María Reyes] - [Marketing specialist]
 - **Stack Tecnológico:** [Flutter, Django, Python, Dart, PostgreSQL, Docker]
 - **Repositorio del Proyecto:** https://github.com/charly05tr/mecani-backend
