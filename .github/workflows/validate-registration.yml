@@ -1,0 +1,40 @@
+name: Validate Team Registration
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'equipos/*.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check file format
+        run: |
+          # Identificar los archivos modificados en la carpeta equipos/
+          FILES=$(git diff --name-only --diff-filter=A origin/main...HEAD | grep '^equipos/.*\.md$' | grep -v '_plantilla.md')
+          
+          if [ -z "$FILES" ]; then
+            echo "No se encontraron nuevos archivos de registro en la carpeta equipos/."
+            exit 1
+          fi
+
+          for FILE in $FILES; do
+            echo "Validando $FILE..."
+            
+            # Verificar campos obligatorios
+            grep -q "Nombre del Proyecto:" "$FILE" || { echo "Error: Falta 'Nombre del Proyecto:' en $FILE"; exit 1; }
+            grep -q "Integrantes:" "$FILE" || { echo "Error: Falta 'Integrantes:' en $FILE"; exit 1; }
+            grep -q "Stack Tecnológico:" "$FILE" || { echo "Error: Falta 'Stack Tecnológico:' en $FILE"; exit 1; }
+            grep -q "Repositorio del Proyecto:" "$FILE" || { echo "Error: Falta 'Repositorio del Proyecto:' en $FILE"; exit 1; }
+            
+            # Verificar que el repositorio sea un enlace de GitHub
+            grep "Repositorio del Proyecto:" "$FILE" | grep -q "https://github.com/" || { echo "Error: El repositorio debe ser una URL de GitHub válida en $FILE"; exit 1; }
+          done
+          
+          echo "✅ Validación exitosa. Registro correcto."
